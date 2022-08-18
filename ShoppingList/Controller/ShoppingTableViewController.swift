@@ -10,7 +10,6 @@ import CoreData
 
 class ShoppingTableViewController: UITableViewController {
     
-    //    var shopping = [String]()
     var shopping = [Shopping]()
     var managedObjectContext: NSManagedObjectContext?
     
@@ -30,6 +29,9 @@ class ShoppingTableViewController: UITableViewController {
     func loadData() {
         let request: NSFetchRequest<Shopping> = Shopping.fetchRequest()
         do {
+            // read up on sortDescriptor
+            request.sortDescriptors = [NSSortDescriptor(key: "rowOrder", ascending: true)]
+            
             if let result = try managedObjectContext?.fetch(request) {
                 shopping = result
                 self.tableView.reloadData()
@@ -69,6 +71,7 @@ class ShoppingTableViewController: UITableViewController {
     }
     
 #warning("add alert sheet for the trash button, to delete all items in the list")
+    // read up on this tommorow too
     @IBAction func deleteAllItems(_ sender: Any) {
         let alertController = UIAlertController(title: "Delete items", message: "Do you really want to delete all items from the list?", preferredStyle: .alert)
         
@@ -137,8 +140,8 @@ class ShoppingTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "shoppingCell", for: indexPath)
         
-        //        cell.textLabel?.text = shopping[indexPath.row]
         let shop = shopping[indexPath.row]
+        
         cell.textLabel?.text = "Item: \(shop.value(forKey: "item") ?? "")"
 #warning("add count logic")
         cell.detailTextLabel?.text = "Count: \(shop.value(forKey: "count") ?? "")"
@@ -169,6 +172,7 @@ class ShoppingTableViewController: UITableViewController {
             // Delete the row from the data source
             managedObjectContext?.delete(shopping[indexPath.row])
         }
+        
         saveData()
     }
     
@@ -181,9 +185,18 @@ class ShoppingTableViewController: UITableViewController {
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let itemToMove = shopping[fromIndexPath.row]
+        
         shopping.remove(at: fromIndexPath.row)
         shopping.insert(itemToMove, at: destinationIndexPath.row)
-//        saveData()
+        
+        // go trough this for cycle, tomorrow
+        // As I see it, we go trough the items in the shoppinglist and reasign the old order values with the newValue
+        for (newValue, item) in shopping.enumerated() {
+            item.setValue(newValue, forKey: "rowOrder")
+        }
+        
+        tableView.reloadData()
+        saveData()
     }
     
     

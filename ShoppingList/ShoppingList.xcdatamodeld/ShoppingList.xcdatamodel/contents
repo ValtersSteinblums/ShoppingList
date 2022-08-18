@@ -4,8 +4,9 @@
         <attribute name="completed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="count" optional="YES" attributeType="String"/>
         <attribute name="item" optional="YES" attributeType="String"/>
+        <attribute name="rowOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="Shopping" positionX="-54" positionY="-9" width="128" height="74"/>
+        <element name="Shopping" positionX="-54" positionY="-9" width="128" height="89"/>
     </elements>
 </model>
