@@ -30,6 +30,7 @@ class ShoppingTableViewController: UITableViewController {
         let request: NSFetchRequest<Shopping> = Shopping.fetchRequest()
         do {
             // read up on sortDescriptor
+            // basically, specifies how the objects should be ordered, when the core data is loaded (fetched)
             request.sortDescriptors = [NSSortDescriptor(key: "rowOrder", ascending: true)]
             
             if let result = try managedObjectContext?.fetch(request) {
@@ -58,7 +59,8 @@ class ShoppingTableViewController: UITableViewController {
         present(alertController, animated: true, completion: nil)
     }
     
-    
+    // allows for the rows to be edited/moved
+    // changes bttn img, depending on the state
     @IBAction func startEditButton(_ sender: Any) {
         isEditing = !isEditing
         
@@ -76,7 +78,9 @@ class ShoppingTableViewController: UITableViewController {
         let alertController = UIAlertController(title: "Delete items", message: "Do you really want to delete all items from the list?", preferredStyle: .alert)
         
         let addDeleteButton = UIAlertAction(title: "Delete", style: .destructive) { action in
+            // retrieve data from the persistent storage
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Shopping")
+            // request that deletes all objects in the persistent storage
             let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             
             do {
@@ -143,7 +147,6 @@ class ShoppingTableViewController: UITableViewController {
         let shop = shopping[indexPath.row]
         
         cell.textLabel?.text = "Item: \(shop.value(forKey: "item") ?? "")"
-#warning("add count logic")
         cell.detailTextLabel?.text = "Count: \(shop.value(forKey: "count") ?? "")"
         cell.accessoryType = shop.completed ? .checkmark : .none
         
