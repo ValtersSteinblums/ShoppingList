@@ -29,7 +29,6 @@ class ShoppingTableViewController: UITableViewController {
     func loadData() {
         let request: NSFetchRequest<Shopping> = Shopping.fetchRequest()
         do {
-            // read up on sortDescriptor
             // basically, specifies how the objects should be ordered, when the core data is loaded (fetched)
             request.sortDescriptors = [NSSortDescriptor(key: "rowOrder", ascending: true)]
             
@@ -192,7 +191,6 @@ class ShoppingTableViewController: UITableViewController {
         shopping.remove(at: fromIndexPath.row)
         shopping.insert(itemToMove, at: destinationIndexPath.row)
         
-        // go trough this for cycle, tomorrow
         // As I see it, we go trough the items in the shoppinglist and reasign the old order values with the newValue
         for (newValue, item) in shopping.enumerated() {
             item.setValue(newValue, forKey: "rowOrder")
